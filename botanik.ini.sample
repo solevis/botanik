@@ -1,0 +1,55 @@
+[bot]
+nick = Botanik
+password = secret
+realname = Botanik
+host = chat.freenode.net
+port = 6667
+ssl = false
+includes =
+    irc3.plugins.core
+    irc3.plugins.command
+    paulla.ircbot.plugins.ChannelLogger
+    paulla.ircbot.plugins.Urls
+    paulla.ircbot.plugins.Taquin
+    paulla.ircbot.plugins.YKFK
+    paulla.ircbot.plugins.Politesse
+    paulla.ircbot.plugins.Userlist
+    paulla.ircbot.plugins.nickserv
+#    paulla.ircbot.plugins.door
+    paulla.ircbot.plugins.Utils
+    paulla.ircbot.plugins.PaullaBot
+    paulla.ircbot.plugins.human
+    
+
+autojoins =
+    paulla
+    paullab
+    test-mika
+
+
+[paulla.ircbot.plugins.ChannelLogger]
+
+directory = /tmp/
+format_file = #channel/%%Y/%%m/log-#channel-%%d-%%m-%%Y.log
+channels = 
+    test-mika
+
+[paulla.ircbot.plugins.Taquin]
+
+db =
+
+[irc3.plugins.command]
+cmd = !
+guard = irc3.plugins.command.mask_based_policy
+
+[irc3.plugins.command.masks]
+
+Mika64!*@* = 
+    admin
+    all_permissions
+
+[paulla.ircbot.plugins.human]
+
+nohuman =
+    PaullaBot
+
