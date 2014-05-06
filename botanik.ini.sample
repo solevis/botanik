@@ -15,14 +15,14 @@ includes =
     paulla.ircbot.plugins.Politesse
     paulla.ircbot.plugins.Userlist
     paulla.ircbot.plugins.nickserv
-#    paulla.ircbot.plugins.door
+    paulla.ircbot.plugins.door
     paulla.ircbot.plugins.Utils
     paulla.ircbot.plugins.PaullaBot
     paulla.ircbot.plugins.human
     
 
 autojoins =
-    paulla
+#    paulla
     paullab
     test-mika
 
