@@ -40,4 +40,5 @@ nosetests.xml
 
 #  hum
 botanik.ini
-
+*.log
+*.pid

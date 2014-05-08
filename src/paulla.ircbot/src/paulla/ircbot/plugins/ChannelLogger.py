@@ -31,7 +31,7 @@ class ChannelLogger(object):
         else:
             self.chanlogger(event, channel, nick, data, mask)
 
-    def chanlogger(self, event, channel, nick, data, mask):
+    def chanlogger(self, event, channel, nick, data, mask=None):
         now = datetime.now().replace(microsecond = 0)
         log_format = self.bot.config['paulla.ircbot.plugins.ChannelLogger']['format_file'].replace('#channel', channel)
         log_dir = self.bot.config['paulla.ircbot.plugins.ChannelLogger']['directory']
