@@ -27,11 +27,11 @@ class ChannelLogger(object):
         if event == 'QUIT':
             channels = self.bot.config['paulla.ircbot.plugins.ChannelLogger']['channels']
             for chan in channels:
-                self.chanlogger(event, '#' + chan, nick, data)
+                self.chanlogger(event, '#' + chan, nick, data, mask)
         else:
-            self.chanlogger(event, channel, nick, data)
+            self.chanlogger(event, channel, nick, data, mask)
 
-    def chanlogger(self, event, channel, nick, data):
+    def chanlogger(self, event, channel, nick, data, mask):
         now = datetime.now().replace(microsecond = 0)
         log_format = self.bot.config['paulla.ircbot.plugins.ChannelLogger']['format_file'].replace('#channel', channel)
         log_dir = self.bot.config['paulla.ircbot.plugins.ChannelLogger']['directory']
@@ -41,13 +41,13 @@ class ChannelLogger(object):
             if not path.exists(path.dirname(logfile)):
                 makedirs(path.dirname(logfile))
             if event == 'PRIVMSG':
-                line = nick + ' : ' + data
+                line = "<%s> : %s" % (nick, data)
             elif event == 'JOIN':
-                line = '%s has joined %s' % (nick, channel)
+                line = '*** %s <%s> has joined %s' % (nick, mask, channel)
             elif event == 'PART':
-                line = '%s has left %s' % (nick, channel)
+                line = '*** %s <%s> has left %s' % (nick, mask, channel)
             elif event == 'QUIT':
-                line = '%s has quit IRC (%s)' % (nick, data)
+                line = '*** %s <%s> has quit IRC (%s)' % (nick, mask, data)
             else:
                 pass
             with open(logfile, 'a') as f:
