@@ -30,7 +30,7 @@ autojoins =
 [paulla.ircbot.plugins.ChannelLogger]
 
 directory = /tmp/
-format_file = #channel/%%Y/%%m/log-#channel-%%d-%%m-%%Y.log
+format_file = #channel/%%Y/%%m/#channel-%%d-%%m-%%Y.log
 channels = 
     test-mika
 
