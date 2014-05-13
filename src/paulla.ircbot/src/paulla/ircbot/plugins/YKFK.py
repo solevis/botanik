@@ -1,6 +1,6 @@
 import irc3
 
-masters = ('jpcw', 'mi-cha-el')
+masters = ('Botanik')
 
 @irc3.plugin
 class Yakafokon:
@@ -13,7 +13,7 @@ class Yakafokon:
     def ykfk(self, mask, event, target, data):
         if not mask.nick.startswith(masters):
             yakafokon = ['falloir', 'faudrait', 'faudra', 'faut', 
-                         'faille', 'faudra', 'fallait', 'il fallût',
-                         'fallu' , 'faire']
+                         'faille', 'fallait', 'il fallût', 'fallu' ,
+                         'faire']
             if [terme for terme in yakafokon if terme in data]:
                 self.bot.privmsg(target, "¡¡¡ YAKAFOKON detected !!!")
