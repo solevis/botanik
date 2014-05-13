@@ -1,6 +1,10 @@
+from configparser import ConfigParser, ExtendedInterpolation
 import irc3
 
-masters = ('Botanik')
+
+parser = ConfigParser(interpolation=ExtendedInterpolation())
+parser.read('ykfk.cfg')
+masters = parser['config']['immunized'].splitlines()
 
 @irc3.plugin
 class Yakafokon:
