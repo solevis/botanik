@@ -35,7 +35,7 @@ class Door:
         if (datetime.now() - last_change).seconds <= 60:
             for chan in self.bot.channels:
                 if "0" in r['state']:
-                    self.bot.privmsg(chan,'Le lab est ouvert')
+                    self.bot.notice(chan,'Le lab est ouvert')
                 elif "1" in r['state']:
-                    self.bot.privmsg(chan,'Le lab vient de fermer')
+                    self.bot.notice(chan,'Le lab vient de fermer')
         
