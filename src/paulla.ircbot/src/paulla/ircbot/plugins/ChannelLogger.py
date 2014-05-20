@@ -41,7 +41,10 @@ class ChannelLogger(object):
             if not path.exists(path.dirname(logfile)):
                 makedirs(path.dirname(logfile))
             if event == 'PRIVMSG':
-                line = "<%s> %s" % (nick, data)
+                if data.startswith('\x01ACTION'):
+                    line = "* %s %s" % (nick, data.replace('\x01', '').replace('ACTION', ''))
+                else:
+                    line = "<%s> %s" % (nick, data)
             elif event == 'JOIN':
                 line = '*** %s <%s> has joined %s' % (nick, mask, channel)
             elif event == 'PART':
