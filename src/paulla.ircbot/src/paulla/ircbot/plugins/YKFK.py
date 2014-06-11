@@ -4,7 +4,7 @@ import irc3
 
 parser = ConfigParser(interpolation=ExtendedInterpolation())
 parser.read('ykfk.cfg')
-masters = tuple(parser['config']['immunized'].splitlines())
+masters = tuple(parser['config']['immunized'].splitlines()[1:])
 
 @irc3.plugin
 class Yakafokon:
