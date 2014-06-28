@@ -7,7 +7,7 @@ from irc3.utils import *
 
 @irc3.plugin
 class Utils:
-    """A plugin is a class which take the IrcBot as argument
+    """A plugin is a class which takes the IrcBot as argument
     """
 
     def __init__(self, bot):

@@ -5,7 +5,7 @@ __doc__ = '''
 :mod:`irc3.plugins.userlist` User list plugin
 ==============================================
 
-This plugin maintain a know user list and a channel list.
+This plugin maintains a known user list and a channel list.
 
 ..
 >>> from testing import IrcBot
