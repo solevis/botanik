@@ -9,7 +9,6 @@ from irc3.plugins.command import command
 import requests
 from bs4 import BeautifulSoup
 
-
 @irc3.plugin
 class Urls:
     """
@@ -69,22 +68,26 @@ class Urls:
 
         for url in urls:
             req = requests.get(url)
-            soup = BeautifulSoup(req.content)
-            title = soup.title.string.encode('ascii', 'ignore').decode('ascii', 'ignore')
-            domain = urlparse(url).netloc.split(':')[0]
-            self.bot.privmsg(target, "Title: %s - (at %s)" % (title, domain))
+            # check HTTP status code, success if code is 2xx (rfc 2616)
+            if (req.status_code / 100 % 10) == 2:
+              soup = BeautifulSoup(req.content)
+              title = soup.title.string.encode('ascii', 'ignore').decode('ascii', 'ignore')
+              domain = urlparse(url).netloc.split(':')[0]
+              self.bot.privmsg(target, "Title: %s - (at %s)" % (title, domain))
 
-            cur = self.conn.cursor()
+              cur = self.conn.cursor()
 
-            cur.execute("SELECT dt_inserted, nick from url where value='%s'" % url)
-            data = cur.fetchall()
+              cur.execute("SELECT dt_inserted, nick from url where value='%s'" % url)
+              data = cur.fetchall()
 
-            if data:
-                self.displayOld(target, nick, data[0][0])
+              if data:
+                  self.displayOld(target, nick, data[0][0])
+              else:
+                  cur.execute("INSERT INTO url(value, title, nick, dt_inserted) VALUES('%s', '%s', '%s', datetime('now')) ;" % (url, title, nick))
+                  self.conn.commit()
+              cur.close()
             else:
-                cur.execute("INSERT INTO url(value, title, nick, dt_inserted) VALUES('%s', '%s', '%s', datetime('now')) ;" % (url, title, nick))
-                self.conn.commit()
-            cur.close()
+              self.bot.privmsg(target, "URL error: %s" % (url))
 
     def displayOld(self, target, nick, dt_inserted):
         cur = self.conn.cursor()
