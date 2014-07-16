@@ -18,6 +18,6 @@ class Yakafokon:
         if not mask.nick.startswith(masters):
             yakafokon = [' falloir', ' faudrait', ' faudra', ' faut', 
                          ' faille', ' fallait', 'il fallût', ' fallu' ,
-                         ' faire']
+                         ' faire', 'YAKAFOKON']
             if [terme for terme in yakafokon if terme in data]:
                 self.bot.privmsg(target, "¡¡¡ YAKAFOKON detected !!!")
