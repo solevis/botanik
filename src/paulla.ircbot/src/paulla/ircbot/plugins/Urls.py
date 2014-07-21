@@ -9,6 +9,9 @@ from irc3.plugins.command import command
 import requests
 from bs4 import BeautifulSoup
 
+TITLE_MSG = "Titre: %s - (@ %s)"
+URL_ERROR_MSG = "Erreur %d: %s"
+
 @irc3.plugin
 class Urls:
     """
@@ -73,7 +76,7 @@ class Urls:
               soup = BeautifulSoup(req.content)
               title = soup.title.string.encode('ascii', 'ignore').decode('ascii', 'ignore')
               domain = urlparse(url).netloc.split(':')[0]
-              self.bot.privmsg(target, "Title: %s - (at %s)" % (title, domain))
+              self.bot.privmsg(target, TITLE_MSG % (title, domain))
 
               cur = self.conn.cursor()
 
@@ -87,7 +90,7 @@ class Urls:
                   self.conn.commit()
               cur.close()
             else:
-              self.bot.privmsg(target, "URL error: %s" % (url))
+              self.bot.privmsg(target, URL_ERROR_MSG % (req.status_code, url))
 
     def displayOld(self, target, nick, dt_inserted):
         cur = self.conn.cursor()
