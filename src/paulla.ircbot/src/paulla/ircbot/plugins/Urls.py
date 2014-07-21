@@ -1,3 +1,10 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+"""
+Plugins to show URL's title
+"""
+
 import sqlite3
 from os.path import exists, dirname, expanduser
 import re
@@ -13,7 +20,7 @@ TITLE_MSG = "Titre: %s - (@ %s)"
 URL_ERROR_MSG = "Erreur %d: %s"
 
 @irc3.plugin
-class Urls:
+class Urls(object):
     """
     A plugin for print Url title
     """
@@ -24,16 +31,16 @@ class Urls:
         if 'paulla.ircbot.plugins.Urls' in self.bot.config\
                 and 'db' in self.bot.config['paulla.ircbot.plugins.Urls']\
                 and self.bot.config['paulla.ircbot.plugins.Urls']['db']:
-            db = self.bot.config['paulla.ircbot.plugins.Urls']['db']
+            database = self.bot.config['paulla.ircbot.plugins.Urls']['db']
         else:
-            db = '~/.irc3/Urls.db'
-        if '~' in db:
-            db = expanduser(db)
-        if not exists(db):
-            if not exists(dirname(db)):
-                makedirs(dirname(db))
-            open(db, 'a').close()
-        self.conn = sqlite3.connect(db)
+            database = '~/.irc3/Urls.db'
+        if '~' in database:
+            database = expanduser(database)
+        if not exists(database):
+            if not exists(dirname(database)):
+                makedirs(dirname(database))
+            open(database, 'a').close()
+        self.conn = sqlite3.connect(database)
         cur = self.conn.cursor()
         cur.execute('''create table if not exists url
                 (id_url integer primary key,
@@ -65,7 +72,7 @@ class Urls:
         """
         parse and reply url title
         """
-        urls = re.findall('(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)', data)
+        urls = re.findall(r'(?P<url>http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)', data)
 
         nick = mask.split('!')[0]
 
@@ -73,26 +80,27 @@ class Urls:
             req = requests.get(url)
             # check HTTP status code, success if code is 2xx (rfc 2616)
             if (req.status_code / 100 % 10) == 2:
-              soup = BeautifulSoup(req.content)
-              title = soup.title.string.encode('ascii', 'ignore').decode('ascii', 'ignore')
-              domain = urlparse(url).netloc.split(':')[0]
-              self.bot.privmsg(target, TITLE_MSG % (title, domain))
+                soup = BeautifulSoup(req.content)
+                title = soup.title.string.encode('ascii', 'ignore').decode('ascii', 'ignore')
+                domain = urlparse(url).netloc.split(':')[0]
+                self.bot.privmsg(target, TITLE_MSG % (title, domain))
 
-              cur = self.conn.cursor()
+                cur = self.conn.cursor()
 
-              cur.execute("SELECT dt_inserted, nick from url where value='%s'" % url)
-              data = cur.fetchall()
+                cur.execute("SELECT dt_inserted, nick from url where value='%s'" % url)
+                data = cur.fetchall()
 
-              if data:
-                  self.displayOld(target, nick, data[0][0])
-              else:
-                  cur.execute("INSERT INTO url(value, title, nick, dt_inserted) VALUES('%s', '%s', '%s', datetime('now')) ;" % (url, title, nick))
-                  self.conn.commit()
-              cur.close()
+                if data:
+                    self.display_old(target, nick, data[0][0])
+                else:
+                    cur.execute("INSERT INTO url(value, title, nick, dt_inserted) VALUES('%s', '%s', '%s', datetime('now')) ;" % (url, title, nick))
+                    self.conn.commit()
+                cur.close()
             else:
-              self.bot.privmsg(target, URL_ERROR_MSG % (req.status_code, url))
+                self.bot.privmsg(target, URL_ERROR_MSG % (req.status_code, url))
 
-    def displayOld(self, target, nick, dt_inserted):
+    def display_old(self, target, nick, dt_inserted):
+        """display an old stored URL"""
         cur = self.conn.cursor()
         cur.execute("SELECT value FROM old ORDER BY RANDOM() LIMIT 1")
         data = cur.fetchall()
@@ -116,7 +124,7 @@ class Urls:
 
         if args['<add/remove>'].lower() == 'remove':
             cur = self.conn.cursor()
-            cur.execute("DELETE FROM old where value= '%s';" %(str(' '.join(args['<message>'])).replace("'", "''") ))
+            cur.execute("DELETE FROM old where value= '%s';" %(str(' '.join(args['<message>'])).replace("'", "''")))
             self.conn.commit()
             return
 
@@ -171,7 +179,3 @@ class Urls:
             self.conn.commit()
             cur.close()
             return
-
-
-
-# end of file
