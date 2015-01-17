@@ -16,8 +16,6 @@ class Yakafokon:
     @irc3.event(irc3.rfc.PRIVMSG)
     def ykfk(self, mask, event, target, data):
         if not mask.nick.startswith(masters):
-            yakafokon = [' falloir', ' faudrait', ' faudra', ' faut', 
-                         ' faille', ' fallait', 'il fallût', ' fallu',
-                         'YAKAFOKON']
-            if [terme for terme in yakafokon if terme in data]:
+            yakafokon = list(parser['config']['badwords'].splitlines()[1:])
+            if [terme for terme in yakafokon if ' %s ' %terme in data]:
                 self.bot.privmsg(target, "¡¡¡ YAKAFOKON detected !!!")
